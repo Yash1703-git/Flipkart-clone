@@ -1,8 +1,6 @@
 // src/SignUp.jsx
 import React, { useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "./api"; // adjust path
-
 
 export default function Signup() {
   const [form, setForm] = useState({ name: "", email: "", password: "", role: "user" });
@@ -18,7 +16,7 @@ export default function Signup() {
     setMessage("");
 
     try {
-      await axios.post(`${API_BASE_URL}/api/auth/register`, form);
+      await axios.post("http://localhost:5000/api/auth/register", form);
       setMessage("Registration successful! Please login.");
       setForm({ name: "", email: "", password: "", role: "user" });
     } catch (err) {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "./api"; // adjust path
 
 //  Component to manage products: Add, Update, Delete, List
 export default function AdminProducts() {
@@ -18,7 +17,7 @@ export default function AdminProducts() {
   });
 
   // Base API URL
-  const api = `${API_BASE_URL}/api/products`;
+  const api = "http://localhost:5000/api/products";
 
   //  Fetch all products from backend
   const fetchProducts = async () => {
