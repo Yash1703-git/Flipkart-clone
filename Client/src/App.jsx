@@ -21,7 +21,7 @@ export default function App() {
     if (storedUser) setUser(storedUser);
 
     // ✅ Clear session on full browser/tab close
-    const handleUnload = (event) => {
+    const handleUnload = () => {
       if (!performance.getEntriesByType("navigation")[0].type.includes("reload")) {
         sessionStorage.clear();
         localStorage.clear();
