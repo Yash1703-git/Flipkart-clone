@@ -16,14 +16,9 @@ const allowedOrigins = [
 ];
 
 // ===== Middleware =====
-app.use(
-  cors({
-    origin: allowedOrigins,
-    credentials: true,
-  })
-);
-
+app.use(cors());
 app.use(express.json());
+
 
 // ===== MongoDB Connection =====
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/flipcart';
