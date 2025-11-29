@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "./api"; // adjust path
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
@@ -7,7 +8,7 @@ export default function AdminOrders() {
   // Fetch all orders
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/orders");
+      const res = await axios.get(`${API_BASE_URL}/api/orders`);
       setOrders(res.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -21,7 +22,7 @@ export default function AdminOrders() {
   // Handle order complete
   const handleComplete = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/orders/${orderId}`); // ✅ remove from DB
+      await axios.delete(`${API_BASE_URL}/api/orders/${orderId}`); // ✅ remove from DB
       setOrders((prev) => prev.filter((o) => o._id !== orderId)); // ✅ remove from UI
       alert("✅ Order completed successfully!");
     } catch (error) {
@@ -33,7 +34,7 @@ export default function AdminOrders() {
   // Handle order dismiss
   const handleDismiss = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/orders/${orderId}`); // ✅ remove from DB
+      await axios.delete(`${API_BASE_URL}/orders/${orderId}`); // ✅ remove from DB
       setOrders((prev) => prev.filter((o) => o._id !== orderId)); // ✅ remove from UI
       alert("🗑️ Order dismissed successfully!");
     } catch (error) {

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
 import Footer from "./Footer";
+import { API_BASE_URL } from "./api"; // adjust path
 
 // Popup Component
 function ProductPopup({ product, onClose, onAddToCart }) {
@@ -79,7 +80,7 @@ function ProductPopup({ product, onClose, onAddToCart }) {
 }
 
 export default function Home({ searchTerm }) {
-  const api = "http://localhost:5000/api/products";
+  const api = `${API_BASE_URL}/api/products`;
   const [data, setData] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
 

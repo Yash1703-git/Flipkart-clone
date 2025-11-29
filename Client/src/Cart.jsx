@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "./api"; // adjust path
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
@@ -7,7 +8,7 @@ export default function Cart() {
   const [message, setMessage] = useState(""); // ✅ new success message state
 
   const user = JSON.parse(sessionStorage.getItem("user")) || null;
-  const API_URL = "http://localhost:5000/api/orders";
+  const API_URL = `${API_BASE_URL}/api/orders`;
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
