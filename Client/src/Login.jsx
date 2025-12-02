@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-// import { API_BASE_URL } from "./api"; // adjust path
+import { API_BASE_URL } from "./api"; // NEW
 
 export default function Login({ onLogin }) {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -19,7 +19,8 @@ export default function Login({ onLogin }) {
     setMessage("");
 
     try {
-      const res = await axios.post("http://localhost:5000", form);
+      // CORRECT: use backend base + /api/auth/login
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, form);
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", res.data.token);
@@ -28,7 +29,6 @@ export default function Login({ onLogin }) {
 
       setMessage("Login successful! Redirecting...");
 
-      // Redirect based on role
       if (res.data.user.role === "admin") {
         navigate("/admin/products", { replace: true });
       } else {

@@ -1,11 +1,16 @@
 // src/SignUp.jsx
 import React, { useState } from "react";
 import axios from "axios";
-// import { API_BASE_URL } from "./api"; // adjust path
-
+import { API_BASE_URL } from "./api"; // added
 
 export default function Signup() {
-  const [form, setForm] = useState({ name: "", email: "", password: "", role: "user" });
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "user",
+  });
+
   const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
@@ -18,7 +23,8 @@ export default function Signup() {
     setMessage("");
 
     try {
-      await axios.post("http://localhost:5000/api/auth/register", form);
+      await axios.post(`${API_BASE_URL}/api/auth/register`, form);
+
       setMessage("Registration successful! Please login.");
       setForm({ name: "", email: "", password: "", role: "user" });
     } catch (err) {
@@ -39,6 +45,7 @@ export default function Signup() {
           className="form-control mb-3"
           required
         />
+
         <input
           type="email"
           name="email"
@@ -48,6 +55,7 @@ export default function Signup() {
           className="form-control mb-3"
           required
         />
+
         <input
           type="password"
           name="password"
@@ -57,9 +65,11 @@ export default function Signup() {
           className="form-control mb-3"
           required
         />
+
         <button type="submit" className="btn btn-success w-100">
           Register
         </button>
+
         {message && <p className="mt-3 text-center text-info">{message}</p>}
       </form>
     </div>

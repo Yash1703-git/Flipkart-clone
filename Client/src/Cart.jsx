@@ -1,13 +1,16 @@
+// src/Cart.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "./api"; // adjust path
+import { API_BASE_URL } from "./api"; // NEW
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
-  const [message, setMessage] = useState(""); // ✅ new success message state
+  const [message, setMessage] = useState("");
 
   const user = JSON.parse(sessionStorage.getItem("user")) || null;
+
+  // Use centralized API
   const API_URL = `${API_BASE_URL}/api/orders`;
 
   useEffect(() => {
@@ -78,7 +81,6 @@ export default function Cart() {
       localStorage.removeItem("cart");
       setCart([]);
 
-      // Clear message after few seconds
       setTimeout(() => setMessage(""), 4000);
     } catch (error) {
       console.error("Order Error:", error);
@@ -90,7 +92,6 @@ export default function Cart() {
     <div className="container py-4">
       <h2 className="text-center mb-4">🛒 Your Cart</h2>
 
-      {/* ✅ Success message display */}
       {message && (
         <div className="alert alert-success text-center fw-bold" role="alert">
           {message}
@@ -165,10 +166,7 @@ export default function Cart() {
                 <span>Total Price:</span> <span>₹ {total.toFixed(2)}</span>
               </p>
               <hr />
-              <button
-                className="btn btn-success w-100"
-                onClick={handlePlaceOrder}
-              >
+              <button className="btn btn-success w-100" onClick={handlePlaceOrder}>
                 Place Order
               </button>
             </div>

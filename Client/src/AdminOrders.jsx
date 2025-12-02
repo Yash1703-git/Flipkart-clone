@@ -1,13 +1,17 @@
+// src/AdminOrders.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "./api"; // NEW
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
 
+  const API = `${API_BASE_URL}/api/orders`;
+
   // Fetch all orders
   const fetchOrders = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/orders");
+      const res = await axios.get(API);
       setOrders(res.data);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -18,11 +22,11 @@ export default function AdminOrders() {
     fetchOrders();
   }, []);
 
-  // Handle order complete
+  // Handle order complete (remove order)
   const handleComplete = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:5000/api/orders/${orderId}`); // ✅ remove from DB
-      setOrders((prev) => prev.filter((o) => o._id !== orderId)); // ✅ remove from UI
+      await axios.delete(`${API}/${orderId}`);
+      setOrders((prev) => prev.filter((o) => o._id !== orderId));
       alert("✅ Order completed successfully!");
     } catch (error) {
       console.error("Error completing order:", error);
@@ -30,11 +34,11 @@ export default function AdminOrders() {
     }
   };
 
-  // Handle order dismiss
+  // Handle order dismiss (same action: delete)
   const handleDismiss = async (orderId) => {
     try {
-      await axios.delete(`http://localhost:5000/orders/${orderId}`); // ✅ remove from DB
-      setOrders((prev) => prev.filter((o) => o._id !== orderId)); // ✅ remove from UI
+      await axios.delete(`${API}/${orderId}`);
+      setOrders((prev) => prev.filter((o) => o._id !== orderId));
       alert("🗑️ Order dismissed successfully!");
     } catch (error) {
       console.error("Error dismissing order:", error);
@@ -70,7 +74,6 @@ export default function AdminOrders() {
                 ))}
               </ul>
 
-              {/* ✅ Action Buttons */}
               <div className="mt-3 d-flex gap-2">
                 <button
                   onClick={() => handleComplete(order._id)}
