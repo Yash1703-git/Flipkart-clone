@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "./api"; // adjust path
+// import { API_BASE_URL } from "./api"; // adjust path
 
 export default function Login({ onLogin }) {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -19,7 +19,7 @@ export default function Login({ onLogin }) {
     setMessage("");
 
     try {
-      const res = await axios.post(`${API_BASE_URL}`, form);
+      const res = await axios.post("http://localhost:5000", form);
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
       localStorage.setItem("token", res.data.token);
