@@ -1,6 +1,11 @@
 // src/App.jsx
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import Navbar from "./Navbar";
 import AdminNavbar from "./AdminNavbar";
@@ -15,24 +20,27 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
 
-  // ✅ Load user from sessionStorage on refresh
+  // Load user from sessionStorage on refresh
   useEffect(() => {
     const storedUser = JSON.parse(sessionStorage.getItem("user"));
     if (storedUser) setUser(storedUser);
 
-    // ✅ Clear session on full browser/tab close
     const handleUnload = () => {
-      if (!performance.getEntriesByType("navigation")[0].type.includes("reload")) {
+      if (
+        !performance
+          .getEntriesByType("navigation")[0]
+          .type.includes("reload")
+      ) {
         sessionStorage.clear();
         localStorage.clear();
       }
     };
-    window.addEventListener("beforeunload", handleUnload);
 
+    window.addEventListener("beforeunload", handleUnload);
     return () => window.removeEventListener("beforeunload", handleUnload);
   }, []);
 
-  // ✅ Dynamic document title based on role
+  // Dynamic document title based on role
   useEffect(() => {
     if (user?.role === "admin") {
       document.title = "Admin Panel";
@@ -40,18 +48,17 @@ export default function App() {
       document.title = "Flipkart Online Shopping Site";
     } else {
       document.title = "Login | Flipkart Clone";
-      
     }
   }, [user]);
 
-  // ✅ Handle login and store in sessionStorage
+  // Handle login and store in sessionStorage
   const handleLogin = (userData) => {
     sessionStorage.setItem("user", JSON.stringify(userData));
-    sessionStorage.setItem("token", userData.token);
+    // token comes separately from API; keep if you need it
     setUser(userData);
   };
 
-  // ✅ Handle logout
+  // Handle logout
   const handleLogout = () => {
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("token");
@@ -60,7 +67,7 @@ export default function App() {
 
   return (
     <Router>
-      {/* ✅ Show Navbar based on role */}
+      {/* Navbar based on role */}
       {user?.role === "admin" ? (
         <AdminNavbar onLogout={handleLogout} />
       ) : user ? (
@@ -68,34 +75,72 @@ export default function App() {
       ) : null}
 
       <Routes>
-        {/* ✅ Not Logged In */}
-        {!user && (
-          <>
-            <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
-          </>
-        )}
+        {/* Public auth routes – always exist */}
+        <Route
+          path="/login"
+          element={
+            user ? (
+              <Navigate to="/" replace />
+            ) : (
+              <Login onLogin={handleLogin} />
+            )
+          }
+        />
+        <Route
+          path="/signup"
+          element={user ? <Navigate to="/" replace /> : <Signup />}
+        />
 
-        {/* ✅ User Routes */}
-        {user?.role === "user" && (
-          <>
-            <Route path="/" element={<Home searchTerm={searchTerm} />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </>
-        )}
+        {/* Root route behaves based on user role */}
+        <Route
+          path="/"
+          element={
+            !user ? (
+              <Navigate to="/login" replace />
+            ) : user.role === "admin" ? (
+              <Navigate to="/admin/products" replace />
+            ) : (
+              <Home searchTerm={searchTerm} />
+            )
+          }
+        />
 
-        {/* ✅ Admin Routes */}
-        {user?.role === "admin" && (
-          <>
-            <Route path="/" element={<Navigate to="/admin/products" replace />} />
-            <Route path="/admin/products" element={<AdminProducts />} />
-            <Route path="/admin/orders" element={<AdminOrders />} />
-            <Route path="*" element={<Navigate to="/admin/products" replace />} />
-          </>
-        )}
+        {/* User-only routes */}
+        <Route
+          path="/cart"
+          element={
+            user?.role === "user" ? (
+              <Cart />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+
+        {/* Admin-only routes */}
+        <Route
+          path="/admin/products"
+          element={
+            user?.role === "admin" ? (
+              <AdminProducts />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+        <Route
+          path="/admin/orders"
+          element={
+            user?.role === "admin" ? (
+              <AdminOrders />
+            ) : (
+              <Navigate to="/" replace />
+            )
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

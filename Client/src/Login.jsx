@@ -1,8 +1,8 @@
 // src/Login.jsx
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "./api"; // NEW
+import { useNavigate, Link } from "react-router-dom";   // ← add Link
+import { API_BASE_URL } from "./api";
 
 export default function Login({ onLogin }) {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -19,7 +19,6 @@ export default function Login({ onLogin }) {
     setMessage("");
 
     try {
-      // CORRECT: use backend base + /api/auth/login
       const res = await axios.post(`${API_BASE_URL}/api/auth/login`, form);
 
       localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -69,9 +68,9 @@ export default function Login({ onLogin }) {
 
       <p className="text-center mt-3">
         Don’t have an account?{" "}
-        <a href="/signup" className="text-decoration-none fw-bold">
+        <Link to="/signup" className="text-decoration-none fw-bold">
           Sign up
-        </a>
+        </Link>
       </p>
     </div>
   );
